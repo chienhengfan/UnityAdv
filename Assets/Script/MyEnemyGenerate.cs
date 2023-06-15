@@ -5,11 +5,11 @@ using UnityEngine;
 public class MyEnemyGenerate : MonoBehaviour
 {
     // Start is called before the first frame update
-    public object enemy;
-    private object[] _enemies;
+    public Object enemyObject;
+    private GameObject[] _enemies;
     void Start()
     {
-        
+        GenerateEnemies(20);
     }
 
     // Update is called once per frame
@@ -20,16 +20,23 @@ public class MyEnemyGenerate : MonoBehaviour
 
     public void GenerateEnemies(int num)
     {
-        object[] _e
-        Vector3 vecdir = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(-1.0f, 1.0f));
-        if(vecdir.magnitude == 0.0f)
+        _enemies = new GameObject[num];
+        for (int i = 0; i < num; i++)
         {
-            vecdir.x = 1.0f;
+            Vector3 vecdir = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(-1.0f, 1.0f));
+            GameObject enemy = GameObject.Instantiate(enemyObject) as GameObject;
+
+            if (vecdir.magnitude == 0.0f)
+            {
+                vecdir.x = 1.0f;
+            }
+            vecdir.Normalize();
+            enemy.transform.position = vecdir * Random.Range(5.0f, 20.0f);
+            _enemies[i] = enemy;
+
         }
 
-        for(int i, i < num, i++)
-        {
 
-        }
+
     }
 }

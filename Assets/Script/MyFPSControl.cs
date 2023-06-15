@@ -43,9 +43,23 @@ public class MyFPSControl : MonoBehaviour
         Vector3 moveAmount = (vForward * fMoveV + vRigght * fMoveH) * moveSpeed * Time.deltaTime;
         transform.position = transform.position + moveAmount;
         controlCamera.position = Vector3.Lerp(transform.position, cameraFollowPT.position, 0.8f);
-        
 
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Ray rayGun = new Ray(controlCamera.position, controlCamera.forward);
+            int targetMask = 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Terrain");
+
+            RaycastHit rh = new RaycastHit();
+            bool bHit = Physics.Raycast(rayGun,out rh, 500.0f, targetMask);
+
+            if (bHit)
+            {
+                Debug.Log(rh.collider.name);
+                Debug.Log(rh.point);
+
+            }
+        }
 
     }
 }
