@@ -55,9 +55,25 @@ public class MyFPSControl : MonoBehaviour
 
             if (bHit)
             {
-                Debug.Log(rh.collider.name);
-                Debug.Log(rh.point);
+                //Debug.Log(rh.collider.name);
+                //Debug.Log(rh.point);
+                if (rh.collider.tag == "enemy")
+                {
+                    Myenemy ey = rh.collider.gameObject.GetComponent<Myenemy>();
+                    Debug.Log(ey);
+                    if (ey == null)
+                    {
+                        Debug.Log(ey);
+                    }
+                    else
+                    {
+                        ey.Damage(30.0f);
+                        Debug.Log(ey);
+                    }
 
+                }
+
+                //Destroy(rh.collider.gameObject);
             }
         }
 
