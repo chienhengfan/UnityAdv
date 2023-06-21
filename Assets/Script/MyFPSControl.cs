@@ -7,11 +7,13 @@ public class MyFPSControl : MonoBehaviour
     public Transform controlCamera;
     public Transform cameraFollowPT;
     public Transform gunRoot;
+    public Transform fireRoot;
     public Object hitEffect;
 
     public float rotateSpeed = 1.0f;
     public float moveSpeed = 2.0f;
     public float cameraH = 0.0f;
+    private float gunDistance = 50.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +50,11 @@ public class MyFPSControl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Ray rayGun = new Ray(controlCamera.position, controlCamera.forward);
+            Vector3 temPos = controlCamera.position + controlCamera.forward * gunDistance;
+            Vector3 fireDirection = temPos - fireRoot.position;
+            fireDirection.Normalize();
+
+            Ray rayGun = new Ray(fireRoot.position, fireDirection);
             int targetMask = 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Terrain") | 1 << LayerMask.NameToLayer("Wall");
 
             RaycastHit rh = new RaycastHit();
