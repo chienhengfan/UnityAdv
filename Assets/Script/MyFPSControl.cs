@@ -9,11 +9,12 @@ public class MyFPSControl : MonoBehaviour
     public Transform gunRoot;
     public Transform fireRoot;
     public Object hitEffect;
+    public Object lineEffect;
 
     public float rotateSpeed = 1.0f;
     public float moveSpeed = 2.0f;
     public float cameraH = 0.0f;
-    private float gunDistance = 50.0f;
+    private float gunDistance = 500.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -46,10 +47,17 @@ public class MyFPSControl : MonoBehaviour
         Vector3 moveAmount = (vForward * fMoveV + vRigght * fMoveH) * moveSpeed * Time.deltaTime;
         transform.position = transform.position + moveAmount;
         controlCamera.position = Vector3.Lerp(transform.position, cameraFollowPT.position, 0.8f);
-
+        
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            GameObject lineJet = Instantiate(lineEffect) as GameObject;
+            BulletLine bulletLineJet = lineJet.GetComponent<BulletLine>();
+            Debug.Log(lineJet);
+            Debug.Log(bulletLineJet);
+            lineJet.transform.position = fireRoot.position;
+            
+
             Vector3 temPos = controlCamera.position + controlCamera.forward * gunDistance;
             Vector3 fireDirection = temPos - fireRoot.position;
             fireDirection.Normalize();
@@ -58,15 +66,17 @@ public class MyFPSControl : MonoBehaviour
             int targetMask = 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Terrain") | 1 << LayerMask.NameToLayer("Wall");
 
             RaycastHit rh = new RaycastHit();
-            bool bHit = Physics.Raycast(rayGun,out rh, 500.0f, targetMask);
+            bool bHit = Physics.Raycast(rayGun,out rh, gunDistance, targetMask);
 
             if (bHit)
             {
-                Debug.Log(rh.collider.name);
-                Debug.Log(rh.point);
+                //Debug.Log(rh.collider.name);
+                //Debug.Log(rh.point);
                 GameObject gEffect = Instantiate(hitEffect) as GameObject;
                 gEffect.transform.position = rh.point;
                 gEffect.transform.forward = rh.normal;
+                lineJet.transform.forward = rh.point - fireRoot.position;
+                //bulletLineJet.SetupLine(gunDistance, 1f);
 
                 if (rh.collider.tag == "enemy")
                 {
@@ -78,7 +88,15 @@ public class MyFPSControl : MonoBehaviour
 
                 //Destroy(rh.collider.gameObject);
             }
+            else
+            {
+                lineJet.transform.forward = temPos - fireRoot.position;
+                //bulletLineJet.SetupLine(gunDistance, 1f);
+            }
+            
+
         }
+        
 
     }
 }
