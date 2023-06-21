@@ -7,6 +7,7 @@ public class MyFPSControl : MonoBehaviour
     public Transform controlCamera;
     public Transform cameraFollowPT;
     public Transform gunRoot;
+    public Object hitEffect;
 
     public float rotateSpeed = 1.0f;
     public float moveSpeed = 2.0f;
@@ -48,28 +49,24 @@ public class MyFPSControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Ray rayGun = new Ray(controlCamera.position, controlCamera.forward);
-            int targetMask = 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Terrain");
+            int targetMask = 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Terrain") | 1 << LayerMask.NameToLayer("Wall");
 
             RaycastHit rh = new RaycastHit();
             bool bHit = Physics.Raycast(rayGun,out rh, 500.0f, targetMask);
 
             if (bHit)
             {
-                //Debug.Log(rh.collider.name);
-                //Debug.Log(rh.point);
+                Debug.Log(rh.collider.name);
+                Debug.Log(rh.point);
+                GameObject gEffect = Instantiate(hitEffect) as GameObject;
+                gEffect.transform.position = rh.point;
+                gEffect.transform.forward = rh.normal;
+
                 if (rh.collider.tag == "enemy")
                 {
-                    Myenemy ey = rh.collider.gameObject.GetComponent<Myenemy>();
-                    Debug.Log(ey);
-                    if (ey == null)
-                    {
-                        Debug.Log(ey);
-                    }
-                    else
-                    {
-                        ey.Damage(30.0f);
-                        Debug.Log(ey);
-                    }
+                    GameObject ey = rh.collider.gameObject;
+                    //Myenemy ey = rh.collider.gameObject.GetComponent<Myenemy>();
+                    ey.SendMessage("Damage", 30.0f);
 
                 }
 

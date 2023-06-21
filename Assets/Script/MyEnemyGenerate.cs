@@ -18,6 +18,17 @@ public class MyEnemyGenerate : MonoBehaviour
         
     }
 
+    public void RemoveEnemy(GameObject ey)
+    {
+        for(int i = 0; i < _enemies.Length; i++)
+        {
+            if(_enemies[i] == ey)
+            {
+                _enemies[i] = null;
+            }
+        }
+    }
+
     public void GenerateEnemies(int num)
     {
         _enemies = new GameObject[num];

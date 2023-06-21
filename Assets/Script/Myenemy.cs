@@ -7,6 +7,7 @@ public class Myenemy : MonoBehaviour
     //[SerializeField]k
     private float _hp;
     private Material _material;
+    public Object destroyEffect; 
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +24,8 @@ public class Myenemy : MonoBehaviour
         if (_hp <= 0)
         {
             _hp = 0;
+            GameObject gEffect = Instantiate(destroyEffect) as GameObject;
+            gEffect.transform.position = transform.position;
             Destroy(gameObject);
         }
 
